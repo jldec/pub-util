@@ -184,43 +184,6 @@ test('u.join', function() {
   u.join('FTP://','a.b.c','/booger').should.be.exactly('FTP://a.b.c/booger');
 });
 
-test('u.parseLabel', function() {
-  u.parseLabel().should.match({});
-  u.parseLabel('').should.match({});
-  u.parseLabel('  ').should.match({});
-  u.parseLabel('.').should.match({});
-  u.parseLabel('(').should.match({});
-  u.parseLabel('()').should.match({});
-  u.parseLabel('("")').should.match({});
-  u.parseLabel('#').should.match({_fragname:'#'});
-  u.parseLabel('#(').should.match({_fragname:'#-', fragname:'#('});
-  u.parseLabel('a').should.match({_name:'a'});
-  u.parseLabel('.a').should.match({_ext:'.a'}); // note - no dot-names
-  u.parseLabel('.A').should.match({_ext:'.a'});
-  u.parseLabel('/').should.match({_path:'/'});
-  u.parseLabel('/a').should.match({_path:'/', _name:'a'});
-  u.parseLabel('(home)/').should.match({});
-  u.parseLabel('/ (home)/').should.match({_path:'/home/'});
-  u.parseLabel('/(Go)(Home)/').should.match({_path:'/go-home/'});
-  u.parseLabel('/(Go)(Home)/',{mixedCase:true}).should.match({_path:'/Go-Home/'});
-  u.parseLabel('/a/').should.match({_path:'/a/'});
-  u.parseLabel('/a.b').should.match({_path:'/', _name:'a', _ext:'.b'});
-  u.parseLabel('/a/.b').should.match({_path:'/a/', _ext:'.b'});
-  u.parseLabel('/a_/.b_').should.match({_path:'/a/', _ext:'.b'});
-  u.parseLabel('/a_/.b_', {allow:'_'}).should.match({_path:'/a_/', _ext:'.b_'});
-  u.parseLabel('/a#b').should.match({_path:'/', _name:'a', _fragname:'#b'});
-  u.parseLabel('/a#c.b').should.match({_path:'/', _name:'a', _ext:'.b', _fragname:'#c'});
-  u.parseLabel('/a#c.B',{mixedCase:1}).should.match({_path:'/', _name:'a', _ext:'.B', _fragname:'#c'});
-  u.parseLabel('/a d#c.b').should.match({_path:'/', _name:'a-d', name: 'a d', _ext:'.b', _fragname:'#c'});
-  u.parseLabel('/a d#c d.b').should.match({_path:'/', _name:'a-d', name: 'a d', _ext:'.b', _fragname:'#c-d', fragname:'#c d'});
-  u.parseLabel('/a d#c d.b d').should.match({ _path: '/', _name: 'a-d', name: 'a d', _fragname: '#c-d', _ext: '.b-d', fragname: '#c d' });
-  u.parseLabel('("x")').should.match({cmnt:'x'});
-  u.parseLabel('(draft "x")').should.match({func:'draft', cmnt:'x'});
-  u.parseLabel('(draft a b c "x")').should.match({func:'draft', ref:'a', user:'b', date:'c', cmnt:'x'});
-  u.parseLabel('(update /a/b/c)').should.match({func:'update', ref:'/a/b/c'});
-  u.parseLabel('/a/b/c (update /a/b/c)').should.match({_path:'/a/b/', _name:'c', func:'update', ref:'/a/b/c'});
-  u.parseLabel('/a/b/c#d (update /a/b/c#d)').should.match({_path:'/a/b/', _name:'c', _fragname:'#d', func:'update', ref:'/a/b/c#d'});
-});
 
 
 

@@ -1,9 +1,8 @@
 {
   "name": "pub-util",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Utility toolbelt based on underscore for pub-server and other pub-* packages",
   "main": "pub-util.js",
-  "license": "MIT",
   "dependencies": {
     "underscore": "*",
     "date-plus": "*",

@@ -12,7 +12,7 @@ var _ = require('underscore');
 var ms = require('ms');
 
 _.mixin({
-  date:require('date-plus'),
+  date:            require('date-plus'),
   inspect:         util.inspect,       // simple multi-level object inspector from node
   format:          util.format,        // simple sprintf from node
   inherits:        util.inherits,      // prototypal inheritance from node
@@ -20,10 +20,7 @@ _.mixin({
   str:             str,                // fast coerce to string (non-truthy objects including 0 return '')
   formatCurrency:  formatCurrency,     // $x,xxx.xx
   slugify:         slugify,            // convert name to slugified url
-  slugifyFileName: slugifyFileName,    // slugify preserving '.' (don't mess up extensions)
   unslugify:       unslugify,          // split('-') cap1 join(' ')
-  slugifyPath:     slugifyPath,        // slugify and strip all path segments
-  parseLabel:      parseLabel,         // parse and slugify 'path/name#fragname.ext (suffix)'
   isRootLevel:     isRootLevel,        // tests whether path string is root level e.g. /foo
   parentHref:      parentHref,         // return parent href given href
   escapeRegExp:    escapeRegExp,       // make a string safe to regexp match
@@ -89,14 +86,6 @@ function grep(s) {
   return new RegExp(_.map(str(s).split(/\s/), escapeRegExp).join('.*'), "i")
 }
 
-function noPrefix(s) {
-  return str(s).replace(/^[0-9-]+ +/,'');
-}
-
-function squash(s1, s2){
-  return (str(s1) === str(s2) ? '' : s1);
-}
-
 // convert names to slugified url strings
 // opts.noprefix => remove leading numbers
 // opts.mixedCase => don't lowercase
@@ -104,12 +93,11 @@ function squash(s1, s2){
 function slugify(s, opts) {
   opts = opts || {};
   s = str(s);
-  if (opts.noprefix) { s = noPrefix(s); }
   if (!opts.mixedCase) { s = s.toLowerCase(); }
   return s
     .replace(/&/g, '-and-')
     .replace(/\+/g, '-plus-')
-    .replace(/'s /g, 's ')
+    // .replace(/'s /g, 's ') don-t like theres, there-s is better
     .replace((opts.allow ?
       new RegExp('[^-a-zA-Z0-9' + escapeRegExp(opts.allow) + ']+', 'g') :
       /[^-a-zA-Z0-9]+/g), '-')
@@ -118,87 +106,9 @@ function slugify(s, opts) {
     .replace(/([^\.])-$/, '$1');
 }
 
-// slugify preserving '.' (don't mess up extensions)
-// use to force consistent lowercased filenames e.g. in image upload
-function slugifyFileName(s) {
-  return slugify(s, { allow: '.' } );
-}
-
 // convert names to slugified url strings (NOTE . and _ are preserved)
 function unslugify(s) {
   return _.map(str(s).split('-'), cap1).join(' ');
-}
-
-// slugify all segments in a path
-// supports opts.noprefix to strip num prefix
-function slugifyPath(s, opts) {
-  opts = opts || {};
-  var a = str(s).split('/');
-  return _.map(a, function(segment) { return slugify(segment, opts); })
-                 .join('/');
-};
-
-// parseLabel() e.g.  ==== Some Heading Text .md (draft) ====
-// format: path/name#fragname._ext (func ref user date "comment text")
-//
-// the / # . ( ) characters are treated as special
-// TODO: provide mechanism to escape - markdown uses \
-//
-// - path ends with / and cannot start with # or ( and cannot contain #
-// - name cannot start with . or ( or / or # and cannot contain # or /
-// - fragname starts with the first # and may contain any characters
-//   fragname will cede to an extension or a suffix at the end of the label
-// - extension starts with . and may not contain .
-// - suffix starts with ( and ends with ) at the end of the label
-// e.g. (update / david@example.com 4-11-2001 "ran spellcheck on homepage")
-//
-// NOTE: path/name#fragname are slugified into ._path ._name and ._fragname
-//       so that text headings can be used as separators, and generate labels
-//
-// ALSO: since filenames may be labels, strip ordering prefix from path/name
-//       and swallow names which match the string 'index' exactly (lowercase)
-
-function parseLabel(label, opts) {
-
-  var opts = opts || {}; // passed through to slugify
-
-  var labelGrammar =
-    /^(^\/|^[^#\(][^#]*?\/)?([^#\/\(\.][^#\/]*?)?(#.*?)?(\.[^\.]+)?(?:\s*\(([^\(\)]*)\))?$/;  // omg!
-
-  var m = trim(label).match(labelGrammar) || {};
-
-  var lbl = {};
-
-  if (m[1]) { lbl._path = slugifyPath(m[1], _.merge({ noprefix:1 }, opts)); }
-
-  if (m[2]) {
-    var rawname = noPrefix(squash(m[2], 'index'));
-    lbl._name = slugify(rawname, opts);
-    if (lbl._name !== rawname) { lbl.name = trim(rawname); } // remember original
-  }
-
-  if (m[3]) {
-    lbl._fragname = '#' + slugify(m[3].slice(1), opts);
-    if (m[3] !== lbl._fragname) { lbl.fragname = trim(m[3]); } // remember original
-  }
-
-  if (m[4]) { lbl._ext = '.' + slugify(m[4].slice(1), opts); }
-
-  if (m[5]) {
-
-    var suffixGrammar =
-/^(\w+)?(?:\s+([^\s\"]+))?(?:\s+([^\s\"]+))?(?:\s+([^\s\"]+))?(?:\s*\"([^\"]*)\")?/;
-
-    var s = trim(m[5]).match(suffixGrammar) || {};
-
-    if (s[1]) { lbl.func  = s[1]; }
-    if (s[2]) { lbl.ref   = s[2]; }
-    if (s[3]) { lbl.user  = s[3]; }
-    if (s[4]) { lbl.date  = s[4]; }
-    if (s[5]) { lbl.cmnt  = s[5]; }
-  }
-
-  return lbl;
 }
 
 // tests whether path is root level e.g. /foo -- returns false for /
