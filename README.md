@@ -9,8 +9,6 @@ Utility toolbelt based on [underscore](http://underscorejs.org/) for pub-server 
 - select functions from node `util`, `querystring`, and `path`
 
 ### TODO
-- this module is likely to undergo siginificant changes before v1.0
 - cleanup
-- factor out `slugify` and `parseLabel`
 - optimize and slim-down (lodash?)
 - browser-testing
