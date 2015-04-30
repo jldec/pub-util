@@ -48,6 +48,7 @@ _.mixin({
   pathOpt:         pathOpt,            // resolve paths and return opt in the form [{path:x},...]
   timer:           timer,              // simple ms timer
   setaVal:         setaVal,            // set property value using array if it already exists
+  getaVals:        getaVals,           // return array of values for a property or [] if none exists
   ms:              ms,                 // convert string to ms
   throttleMs:      throttleMs,         // _.throttle with ms string
   setIntervalMs:   setIntervalMs,      // setInterval with ms string
@@ -295,11 +296,20 @@ function timer() {
 
 // set prop k to v - convert to array and push if obj[k] exists
 function setaVal(obj, k, v) {
-  if (obj[k]) {
-    if (!_.isArray(obj[k])) { obj[k] = Array(obj[k]); }
+  if (obj.hasOwnProperty(k)) {
+    var val = obj[k];
+    if (!_.isArray(val)) { obj[k] = [val]; }
     obj[k].push(v);
   }
   else { obj[k] = v; }
+}
+
+// return obj[k] values coerced to array
+function getaVals(obj, k) {
+  if (!obj.hasOwnProperty(k)) return [];
+  var val = obj[k];
+  if (!_.isArray(val)) return [val];
+  return val;
 }
 
 function throttleMs(f, waitMs, options) {

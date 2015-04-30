@@ -1,6 +1,6 @@
 {
   "name": "pub-util",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Utility toolbelt based on underscore for pub-server and other pub-* packages",
   "main": "pub-util.js",
   "dependencies": {

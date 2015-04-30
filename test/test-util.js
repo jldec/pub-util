@@ -184,13 +184,36 @@ test('u.join', function() {
   u.join('FTP://','a.b.c','/booger').should.be.exactly('FTP://a.b.c/booger');
 });
 
-
-
-
-
-
-
-
+test('u.getaVals and u.setaVal', function() {
+  var o = {}
+  u.setaVal(o,'a',1);
+  u.setaVal(o,'a',2);
+  u.setaVal(o,'a',3);
+  u.setaVal(o,'b',[1]);
+  u.setaVal(o,'c',[]);
+  u.setaVal(o,'d',2);
+  u.setaVal(o,'e',0);
+  u.setaVal(o,'f','');
+  u.setaVal(o,'g',null);
+  u.setaVal(o,'h',NaN);
+  u.setaVal(o,'i',{x:1});
+  u.setaVal(o,'j',[0]);
+  u.setaVal(o,'k',undefined);
+  u.setaVal(o,'l',function(){});
+  o.should.eql({a:[1,2,3],b:[1],c:[],d:2,e:0,f:'',g:null,h:NaN,i:{x:1},j:[0],k:undefined,l:function(){}});
+  u.getaVals(o,'a').should.eql([1,2,3]);
+  u.getaVals(o,'b').should.eql([1]);
+  u.getaVals(o,'c').should.eql([]);
+  u.getaVals(o,'d').should.eql([2]);
+  u.getaVals(o,'e').should.eql([0]);
+  u.getaVals(o,'f').should.eql(['']);
+  u.getaVals(o,'g').should.eql([null]);
+  u.getaVals(o,'h').should.eql([NaN]);
+  u.getaVals(o,'i').should.eql([{x:1}]);
+  u.getaVals(o,'j').should.eql([0]);
+  u.getaVals(o,'k').should.eql([undefined]);
+  u.getaVals(o,'l').should.eql([function(){}]);
+})
 
 
 
