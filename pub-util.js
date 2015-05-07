@@ -21,6 +21,7 @@ _.mixin({
   formatCurrency:  formatCurrency,     // $x,xxx.xx
   slugify:         slugify,            // convert name to slugified url
   unslugify:       unslugify,          // split('-') cap1 join(' ')
+  relPath:         relPath,            // return ../../ to the same path depth as input, ./ for none
   isRootLevel:     isRootLevel,        // tests whether path string is root level e.g. /foo
   parentHref:      parentHref,         // return parent href given href
   escapeRegExp:    escapeRegExp,       // make a string safe to regexp match
@@ -110,6 +111,14 @@ function slugify(s, opts) {
 // convert names to slugified url strings (NOTE . and _ are preserved)
 function unslugify(s) {
   return _.map(str(s).split('-'), cap1).join(' ');
+}
+
+// return ../ for each path-level, ./ for non-absolute path or root level
+function relPath(s) {
+  s = str(s);
+  var lvls = str(s).replace(/[^\/]/g, '').slice(1);
+  if (lvls.length < 1 || s.slice(0,1) !== '/') return '.';
+  return '..' + _.toArray(lvls).join('..').slice(0,-1);
 }
 
 // tests whether path is root level e.g. /foo -- returns false for /

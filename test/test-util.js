@@ -215,7 +215,21 @@ test('u.getaVals and u.setaVal', function() {
   u.getaVals(o,'l').should.eql([function(){}]);
 })
 
-
+test('u.relPath', function() {
+  u.relPath('').should.be.exactly('.');
+  u.relPath('/').should.be.exactly('.');
+  u.relPath('a').should.be.exactly('.');
+  u.relPath('a/b').should.be.exactly('.');
+  u.relPath('a/b/c').should.be.exactly('.');
+  u.relPath('a//').should.be.exactly('.');
+  u.relPath('/a').should.be.exactly('.');
+  u.relPath('//').should.be.exactly('..');
+  u.relPath('/a/b').should.be.exactly('..');
+  u.relPath('/a/b/c').should.be.exactly('../..');
+  u.relPath('/a/b/c/d').should.be.exactly('../../..');
+  u.relPath('/a/b/c/d/').should.be.exactly('../../../..');
+  u.relPath('/a/b/c/d/3').should.be.exactly('../../../..');
+})
 
 
 
