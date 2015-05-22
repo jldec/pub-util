@@ -1,13 +1,14 @@
 /**
  * test pub-util
  * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
- *
+ * TODO: rewrite sans should
 **/
 
 suite('test pub-util');
 
 var u = require('../pub-util');
 var should = require('should');
+var assert = require('assert');
 
 test('u.date', function(){
   u.date('2014-04-02').addDays(2).valueOf().should.be.exactly((new Date(2014,3,4)).valueOf());
@@ -139,7 +140,37 @@ test('u.parsePrice', function(){
 
 });
 
-test('u.isNumber', function(){
+test('u.parentHref', function() {
+  assert(u.parentHref('/') === null);
+  assert(u.parentHref('') === null);
+  assert(u.parentHref('a') === null);
+  assert(u.parentHref('/a') === '/');
+  assert(u.parentHref('a/') === null);
+  assert(u.parentHref('/a/') === '/');
+  assert(u.parentHref('/a/b') === '/a/');
+  assert(u.parentHref('/a/b/c') === '/a/b/');
+  assert(u.parentHref('//a') === '/');
+  assert(u.parentHref('a//') === null);
+  assert(u.parentHref('//a//') === '/');
+  assert(u.parentHref('//a//b') === '/a/');
+  assert(u.parentHref('//a//b//c') === '/a/b/');
+
+  assert(u.parentHref('/',true) === null);
+  assert(u.parentHref('',true) === null);
+  assert(u.parentHref('a',true) === null);
+  assert(u.parentHref('/a',true) === '/');
+  assert(u.parentHref('a/',true) === null);
+  assert(u.parentHref('/a/',true) === '/');
+  assert(u.parentHref('/a/b',true) === '/a');
+  assert(u.parentHref('/a/b/c',true) === '/a/b');
+  assert(u.parentHref('//a',true) === '/');
+  assert(u.parentHref('a//',true) === null);
+  assert(u.parentHref('//a//',true) === '/');
+  assert(u.parentHref('//a//b',true) === '/a');
+  assert(u.parentHref('//a//b//c',true) === '/a/b');
+})
+
+test('u.isNumber', function() {
 
   u.isNumber(1).should.be.true;
   u.isNumber(Number('0')).should.be.true;

@@ -110,7 +110,7 @@ function slugify(s, opts) {
 
 // convert names to slugified url strings (NOTE . and _ are preserved)
 function unslugify(s) {
-  return _.map(str(s).split('-'), cap1).join(' ');
+  return _.map(str(slugify(s)).split('-'), cap1).join(' ');
 }
 
 // return ../ for each path-level, ./ for non-absolute path or root level
@@ -126,10 +126,15 @@ function isRootLevel(path){
   return /^\/[^\/]+$/.test(str(path));
 }
 
-// return parent href given href - returns null for / or href without /
-function parentHref(href) {
-  var pmatch = str(href).match(/(.*)\/.+/);
-  return pmatch && (pmatch[1] || '/');
+// return parent href given href
+// replaces multiple / with single / but does not normalize ../
+// returns null for / or href without /
+// if noTrailingSlash, return parent path without the slash
+// see tests for edge cases
+function parentHref(href, noTrailingSlash) {
+  href = str(href).replace(/\/\/+/g, '/');
+  var pmatch = href.match(/(.*\/)[^\/]+(\/$|$)/);
+  return pmatch && (noTrailingSlash ? (pmatch[1].slice(0,-1) || '/') : pmatch[1]);
 }
 
 // return top level of a path string
