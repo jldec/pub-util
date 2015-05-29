@@ -262,6 +262,30 @@ test('u.relPath', function() {
   u.relPath('/a/b/c/d/3').should.be.exactly('../../../..');
 })
 
+test('u.slugify', function() {
+  u.slugify().should.be.exactly('');
+  u.slugify('').should.be.exactly('');
+  u.slugify('-').should.be.exactly('-');
+  u.slugify('.').should.be.exactly('.');
+  u.slugify('robots.txt').should.be.exactly('robots.txt');
+  u.slugify('rübots.txt').should.be.exactly('r-bots.txt');
+  u.slugify('rübots.t%t').should.be.exactly('r-bots.t-t');
+  u.slugify('rübots.t%t-').should.be.exactly('r-bots.t-t');
+  u.slugify('rübots.t%t---').should.be.exactly('r-bots.t-t');
+  u.slugify('--').should.be.exactly('-');
+  u.slugify('-*-').should.be.exactly('-');
+  u.slugify('_*_', {allow:'*'}).should.be.exactly('*');
+  u.slugify('_*_', {allow:'*_'}).should.be.exactly('_*_');
+  u.slugify('_*_', {allow:'_'}).should.be.exactly('_-_');
+  u.slugify('&').should.be.exactly('and');
+  u.slugify('A&b', {allow:'&'}).should.be.exactly('a-and-b');
+  u.slugify('+').should.be.exactly('plus');
+  u.slugify('A+b', {allow:'+'}).should.be.exactly('a-plus-b');
+  u.slugify('&+').should.be.exactly('and-plus');
+  u.slugify('a').should.be.exactly('a');
+  u.slugify('Ab', {mixedCase:1}).should.be.exactly('Ab');
+})
+
 
 
 

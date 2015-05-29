@@ -46,7 +46,6 @@ _.mixin({
   origin:          origin,             // return origin part of a url
   trim:            trim,               // remove whitespace from start or end
   join:            join,               // join url or fs path segments without replacing // in http://
-  pathOpt:         pathOpt,            // resolve paths and return opt in the form [{path:x},...]
   timer:           timer,              // simple ms timer
   setaVal:         setaVal,            // set property value using array if it already exists
   getaVals:        getaVals,           // return array of values for a property or [] if none exists
@@ -88,7 +87,7 @@ function grep(s) {
   return new RegExp(_.map(str(s).split(/\s/), escapeRegExp).join('.*'), "i")
 }
 
-// convert names to slugified url strings
+// convert names to slugified url strings containing only - . a-z 0-9
 // opts.noprefix => remove leading numbers
 // opts.mixedCase => don't lowercase
 // opts.allow => string of additional characters to allow
@@ -99,13 +98,12 @@ function slugify(s, opts) {
   return s
     .replace(/&/g, '-and-')
     .replace(/\+/g, '-plus-')
-    // .replace(/'s /g, 's ') don-t like theres, there-s is better
     .replace((opts.allow ?
-      new RegExp('[^-a-zA-Z0-9' + escapeRegExp(opts.allow) + ']+', 'g') :
-      /[^-a-zA-Z0-9]+/g), '-')
+      new RegExp('[^-\.a-zA-Z0-9' + escapeRegExp(opts.allow) + ']+', 'g') :
+      /[^-\.a-zA-Z0-9]+/g), '-')
     .replace(/--+/g, '-')
-    .replace(/^-([^\.])/, '$1')
-    .replace(/([^\.])-$/, '$1');
+    .replace(/^-(.)/, '$1')
+    .replace(/(.)-$/, '$1');
 }
 
 // convert names to slugified url strings (NOTE . and _ are preserved)
@@ -271,32 +269,6 @@ function join(base) {
   return base + path.join.apply(this, _.map(args,str));
 }
 
-// return or mutate opt into the form [{path:x},...]
-// resolve relative (or all) paths relative to basedir (if basedir)
-// opt must be a string or an array of strings or objects
-
-function pathOpt(opt, basedir, resolveAll) {
-
-  opt = opt || [];
-
-  if (!_.isArray(opt)) {
-    opt = [ opt ];
-  }
-
-  _.each(opt, function(val, i) {
-
-    if (typeof val === 'string') {
-      opt[i] = val = { path: val };
-    }
-
-    if (val.path && basedir && /^\./.test(val.path)) {
-      val.path = path.join(basedir, val.path);
-    }
-
-  })
-
-  return opt;
-}
 
 function timer() {
   var start = _.now();
