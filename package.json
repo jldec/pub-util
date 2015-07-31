@@ -1,19 +1,18 @@
 {
   "name": "pub-util",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Utility toolbelt based on underscore for pub-server and other pub-* packages",
   "main": "pub-util.js",
   "dependencies": {
-    "underscore": "^1.8.3",
     "date-plus": "^1.0.0",
-    "ms": "^0.7.1"
+    "ms": "^0.7.1",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "mocha": "^2.2.4",
-    "should": "^6.0.1"
+    "tape": "^4.0.1"
   },
   "scripts": {
-    "test": "mocha --ui qunit"
+    "test": "tape test/*.js"
   },
   "repository": {
     "type": "git",

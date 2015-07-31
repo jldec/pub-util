@@ -27,11 +27,10 @@ _.mixin({
   escapeRegExp:    escapeRegExp,       // make a string safe to regexp match
   grep:            grep,               // sugar for new RegExp(_.map(s.split(/\s/), escapeRegExp).join('.*'), "i")
   parseHref:       parseHref,          // decompose href into {path: fragment:} by looking for #
-  merge:           merge,              // return a after mixing in all the properties of b
-  diff:            diff,               // returns props from b different (or missing) in a
+  merge:           merge,              // return a clone of a, mixing in all the properties of b
+  diff:            diff,               // return props from b different (or missing) in a
   mergeDiff:       mergeDiff,          // like merge with support for tombstones (deletes)
   parsePrice:      parsePrice,         // return number given a formatted price (ignores '$') - fails with NaN
-  isNumber:        isNumber,           // returns false for NaN
   parseUrlParams:  parseUrlParams,     // parse the query string part of a url and return object
   urlParams:       urlParams,          // return the query string part of the url between ? and #
   urlPath:         urlPath,            // return url minus everything starting from the first ? or #
@@ -39,7 +38,7 @@ _.mixin({
   csv:             csv,                // return string of comma separated values
   csvqt:           csvqt,              // escape csv string value
   htmlify:         htmlify,            // minimal html object inspector
-  hbreak:          hbreak,             // replaces /n with <br> and escapes the rest
+  hbreak:          hbreak,             // replace /n with <br> and escapes the rest
   stringifiable:   stringifiable,      // safe JSON object inspector
   cap1:            cap1,               // capitalize first letter of a string
   topLevel:        topLevel,           // return top level of a path string
@@ -147,16 +146,17 @@ function cap1(s) {
   return s.slice(0,1).toUpperCase() + s.slice(1);
 }
 
-// return object a after merging into it all the properties of object b
-// uses side-effect to overwrite a
+// return clone of object a after merging into it all the properties of object b
+// does NOT overwrite a -- use _.extend() for that.
 function merge(a, b) {
   var key;
+  var o = _.clone(a);
   if (a && b) {
     for (key in b) {
-      if (b.hasOwnProperty(key)) { a[key] = b[key]; }
+      if (b.hasOwnProperty(key)) { o[key] = b[key]; }
     }
   }
-  return a;
+  return o;
 };
 
 // return 'diff' object with the props from object b which are different (or missing) in object a
@@ -202,9 +202,6 @@ function parsePrice(s) {
   s = str(s).replace(/[\s,$]/g,'');
   return s ? Number(s) : NaN;
 }
-
-// reliably test for NaN (== and === NaN don't work) - TODO fix for infinity
-function isNumber(x) { return (typeof x === 'number') && (x === x); }
 
 function parseUrlParams(url) {
   return querystring.parse(urlParams(url).slice(1));
