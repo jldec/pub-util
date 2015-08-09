@@ -174,6 +174,15 @@ test('u.parentHref', function(t) {
   t.end();
 });
 
+test('u.unPrefix', function(t) {
+  t.equal(u.unPrefix('abc',''), 'abc');
+  t.equal(u.unPrefix('abc','a'), 'bc');
+  t.equal(u.unPrefix('abc','abc'), '');
+  t.equal(u.unPrefix('abc','abcd'), 'abc');
+  t.equal(u.unPrefix('','abc'), '');
+  t.end();
+});
+
 test('u.csv', function(t) {
   t.equal(u.csv(), '');
   t.equal(u.csv(1), '1');

@@ -24,6 +24,7 @@ _.mixin({
   relPath:         relPath,            // return ../../ to the same path depth as input, ./ for none
   isRootLevel:     isRootLevel,        // tests whether path string is root level e.g. /foo
   parentHref:      parentHref,         // return parent href given href
+  unPrefix:        unPrefix,           // return string minus prefix, if the prefix matches
   escapeRegExp:    escapeRegExp,       // make a string safe to regexp match
   grep:            grep,               // sugar for new RegExp(_.map(s.split(/\s/), escapeRegExp).join('.*'), "i")
   parseHref:       parseHref,          // decompose href into {path: fragment:} by looking for #
@@ -132,6 +133,14 @@ function parentHref(href, noTrailingSlash) {
   href = str(href).replace(/\/\/+/g, '/');
   var pmatch = href.match(/(.*\/)[^\/]+(\/$|$)/);
   return pmatch && (noTrailingSlash ? (pmatch[1].slice(0,-1) || '/') : pmatch[1]);
+}
+
+// return string minus prefix, if the prefix matches
+function unPrefix(s, prefix) {
+  s = str(s);
+  if (!prefix) return s;
+  if (s.slice(0, prefix.length) === prefix) return s.slice(prefix.length);
+  return s;
 }
 
 // return top level of a path string
