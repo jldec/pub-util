@@ -1,6 +1,6 @@
 /**
  * pub-util.js
- * Utility toolbelt based on underscore for pub-server and other pub-* packages
+ * Utility toolbelt based on lodash for pub-server and other pub-* packages
  *
  * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
 **/
@@ -8,7 +8,7 @@
 var util = require('util');
 var path = require('path');
 var querystring = require('querystring');
-var _ = require('underscore');
+var _ = require('lodash');
 var ms = require('ms');
 
 _.mixin({
@@ -57,7 +57,9 @@ _.mixin({
   onceMaybe:       onceMaybe           // return once(maybe(f))
 });
 
-_.templateSettings = { interpolate: /\{\-\{(.+?)\}\-\}/g, escape: /\{\{(.+?)\}\}/g, evaluate: /\|(.+?)\|/g };
+_.templateSettings.interpolate = /\{\-\{(.+?)\}\-\}/g;
+_.templateSettings.escape = /\{\{(.+?)\}\}/g;
+_.templateSettings.evaluate = /\|(.+?)\|/g;
 
 module.exports = _;
 
@@ -108,7 +110,7 @@ function slugify(s, opts) {
 
 // convert names to slugified url strings (NOTE . and _ are preserved)
 function unslugify(s) {
-  return _.map(str(slugify(s)).split('-'), cap1).join(' ');
+  return trim(_.map(str(slugify(s)).split('-'), cap1).join(' ')) || s;
 }
 
 // return ../ for each path-level, ./ for non-absolute path or root level

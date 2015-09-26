@@ -288,6 +288,29 @@ test('u.slugify', function(t) {
   t.end();
 });
 
+
+test('u.unslugify', function(t) {
+  t.equal(u.unslugify(), undefined);
+  t.equal(u.unslugify(''), '');
+  t.equal(u.unslugify(' '), ' ');
+  t.equal(u.unslugify('/'), '/');
+  t.equal(u.unslugify('//'), '//');
+  t.equal(u.unslugify('-*-'), '-*-');
+  t.equal(u.unslugify('/+'), 'Plus');
+  t.equal(u.unslugify('&'), 'And');
+  t.equal(u.unslugify('&+'), 'And Plus');
+  t.equal(u.unslugify('-&-+-'), 'And Plus');
+  t.equal(u.unslugify('&boogers-&-snot'), 'And Boogers And Snot');
+  t.equal(u.unslugify('/a/'), 'A');
+  t.equal(u.unslugify('/a/b'), 'A B');
+  t.equal(u.unslugify('/a/bc'), 'A Bc');
+  t.equal(u.unslugify('/a/bc/'), 'A Bc');
+  t.equal(u.unslugify('/a/ bc/'), 'A Bc');
+  t.equal(u.unslugify('/a/ b c/'), 'A B C');
+  t.end();
+});
+
+
 test('u.merge', function(t) {
   var a = {a:1,b:[1,2],c:{x:''}};
   var b = {a:2,b:[2,2],x:{c:''}};
