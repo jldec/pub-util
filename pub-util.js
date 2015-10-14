@@ -13,10 +13,8 @@ var ms = require('ms');
 
 _.mixin({
   date:            require('date-plus'),
-  inspect:         util.inspect,       // simple multi-level object inspector from node
   format:          util.format,        // simple sprintf from node
   inherits:        util.inherits,      // prototypal inheritance from node
-  isError:         util.isError,       // Error typecheck from node
   str:             str,                // fast coerce to string (non-truthy objects including 0 return '')
   formatCurrency:  formatCurrency,     // $x,xxx.xx
   slugify:         slugify,            // convert name to slugified url
@@ -25,10 +23,8 @@ _.mixin({
   isRootLevel:     isRootLevel,        // tests whether path string is root level e.g. /foo
   parentHref:      parentHref,         // return parent href given href
   unPrefix:        unPrefix,           // return string minus prefix, if the prefix matches
-  escapeRegExp:    escapeRegExp,       // make a string safe to regexp match
-  grep:            grep,               // sugar for new RegExp(_.map(s.split(/\s/), escapeRegExp).join('.*'), "i")
+  grep:            grep,               // sugar for new RegExp(_.map(s.split(/\s/), _.escapeRegExp).join('.*'), "i")
   parseHref:       parseHref,          // decompose href into {path: fragment:} by looking for #
-  merge:           merge,              // return a clone of a, mixing in all the properties of b
   diff:            diff,               // return props from b different (or missing) in a
   mergeDiff:       mergeDiff,          // like merge with support for tombstones (deletes)
   parsePrice:      parsePrice,         // return number given a formatted price (ignores '$') - fails with NaN
@@ -44,7 +40,6 @@ _.mixin({
   cap1:            cap1,               // capitalize first letter of a string
   topLevel:        topLevel,           // return top level of a path string
   origin:          origin,             // return origin part of a url
-  trim:            trim,               // remove whitespace from start or end
   join:            join,               // join url or fs path segments without replacing // in http://
   timer:           timer,              // simple ms timer
   setaVal:         setaVal,            // set property value using array if it already exists
@@ -55,7 +50,7 @@ _.mixin({
   setTimeoutMs:    setTimeoutMs,       // setTimeout with ms string
   maybe:           maybe,              // return f || noop
   onceMaybe:       onceMaybe           // return once(maybe(f))
-});
+});                             // mixins are not chainable by lodash
 
 _.templateSettings.interpolate = /\{\-\{(.+?)\}\-\}/g;
 _.templateSettings.escape = /\{\{(.+?)\}\}/g;
@@ -79,14 +74,9 @@ function parseHref(href) {
   return { path:match[1], fragment:match[2] };
 }
 
-// escape regexp special characters
-function escapeRegExp(s) {
-  return str(s).replace(/[\\^$.*+?|{[()]/g, "\\$&");
-};
-
 // search for 1 or more words (must match all words in order)
 function grep(s) {
-  return new RegExp(_.map(str(s).split(/\s/), escapeRegExp).join('.*'), "i")
+  return new RegExp(_.map(str(s).split(/\s/), _.escapeRegExp).join('.*'), "i")
 }
 
 // convert names to slugified url strings containing only - . a-z 0-9
@@ -101,7 +91,7 @@ function slugify(s, opts) {
     .replace(/&/g, '-and-')
     .replace(/\+/g, '-plus-')
     .replace((opts.allow ?
-      new RegExp('[^-\.a-zA-Z0-9' + escapeRegExp(opts.allow) + ']+', 'g') :
+      new RegExp('[^-\.a-zA-Z0-9' + _.escapeRegExp(opts.allow) + ']+', 'g') :
       /[^-\.a-zA-Z0-9]+/g), '-')
     .replace(/--+/g, '-')
     .replace(/^-(.)/, '$1')
@@ -110,7 +100,7 @@ function slugify(s, opts) {
 
 // convert names to slugified url strings (NOTE . and _ are preserved)
 function unslugify(s) {
-  return trim(_.map(str(slugify(s)).split('-'), cap1).join(' ')) || s;
+  return _.trim(_.map(str(slugify(s)).split('-'), cap1).join(' ')) || s;
 }
 
 // return ../ for each path-level, ./ for non-absolute path or root level
@@ -157,19 +147,6 @@ function cap1(s) {
   return s.slice(0,1).toUpperCase() + s.slice(1);
 }
 
-// return clone of object a after merging into it all the properties of object b
-// does NOT overwrite a -- use _.extend() for that.
-function merge(a, b) {
-  var key;
-  var o = _.clone(a);
-  if (a && b) {
-    for (key in b) {
-      if (b.hasOwnProperty(key)) { o[key] = b[key]; }
-    }
-  }
-  return o;
-};
-
 // return 'diff' object with the props from object b which are different (or missing) in object a
 // includes tombstone value === undefined for props which exist in object a but not in object b,
 function diff(a, b) {
@@ -180,7 +157,7 @@ function diff(a, b) {
   return diff;
 }
 
-// just like merge() but use a diff object to overwrite or delete properties of object a
+// just like _.merge but use a diff object to overwrite or delete properties of object a
 // deletes properties whose value in the diff === undefined (apply the tombstone)
 function mergeDiff(a, diff) {
   var key, val
@@ -253,11 +230,6 @@ function origin(url) {
 
 function hbreak(s) {
   return _.escape(str(s)).replace(/[\n\r]+/g, '<br>');
-}
-
-// TODO - make this more efficient
-function trim(s) {
-  return str(s).replace(/^\s*(.*?)\s*$/,'$1');
 }
 
 // path join which doesn't mess with the // in http://

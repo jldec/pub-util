@@ -314,10 +314,17 @@ test('u.unslugify', function(t) {
 test('u.merge', function(t) {
   var a = {a:1,b:[1,2],c:{x:''}};
   var b = {a:2,b:[2,2],x:{c:''}};
-  var c = u.merge(a,b);
+
+  var n = u.merge({},a,b);
+  t.deepEqual(n, {a:2,b:[2,2],c:{x:''},x:{c:''}});
   t.deepEqual(a, {a:1,b:[1,2],c:{x:''}});
   t.deepEqual(b, {a:2,b:[2,2],x:{c:''}});
+
+  var c = u.merge(a,b);
+  t.deepEqual(a, {a:2,b:[2,2],c:{x:''},x:{c:''}});
+  t.deepEqual(b, {a:2,b:[2,2],x:{c:''}});
   t.deepEqual(c, {a:2,b:[2,2],c:{x:''},x:{c:''}});
+
   t.end();
 });
 
