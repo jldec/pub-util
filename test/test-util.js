@@ -7,6 +7,28 @@ var test = require('tape')
 
 var u = require('../pub-util');
 
+test('u.timer', function(t){
+  testTimer(t, u.timer());
+});
+
+test('u.hrtimer', function(t){
+  testTimer(t, u.hrtimer());
+});
+
+function testTimer(t, timer) {
+  t.equal(typeof timer, 'function');
+  var t1 = timer();
+  var t1b = timer();
+  t.equal(typeof t1, 'number');
+  process.nextTick(function() {
+    var t2 = timer();
+    t.equal(typeof t2, 'number');
+    t.true(t2 >= t1);
+    t.true(t2 >= t1b);
+    t.end()
+  });
+}
+
 test('u.date', function(t){
   t.equal(u.date('2014-04-02').addDays(2).valueOf(), (new Date(2014,3,4)).valueOf());
   t.end();
@@ -329,9 +351,9 @@ test('u.merge', function(t) {
 });
 
 test('u.merge edge cases', function(t) {
-  t.deepEqual(u.merge(), undefined);
+  t.deepEqual(u.merge(), {});
   t.deepEqual(u.merge({}), {});
-  t.deepEqual(u.merge(null, {}), null);
+  t.deepEqual(u.merge(null, {}), {});
   t.deepEqual(u.merge({}, {a:1}), {a:1});
   t.end();
 });

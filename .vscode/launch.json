@@ -1,0 +1,21 @@
+{
+  // Use IntelliSense to learn about possible Node.js debug attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "require pub-util and break",
+      "program": "${workspaceFolder}/debug.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch test",
+      "program": "${workspaceRoot}/test/test-util.js",
+      "cwd": "${workspaceRoot}"
+    }
+  ]
+}

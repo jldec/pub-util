@@ -13,6 +13,9 @@ var ms = require('ms');
 
 _.mixin({
   date:            require('date-plus'),
+  pluck:           _.map,              // lodash v3 compatibility
+  indexBy:         _.keyBy,
+  where:           _.filter,
   format:          util.format,        // simple sprintf from node
   inherits:        util.inherits,      // prototypal inheritance from node
   str:             str,                // fast coerce to string (non-truthy objects including 0 return '')
@@ -41,7 +44,8 @@ _.mixin({
   topLevel:        topLevel,           // return top level of a path string
   origin:          origin,             // return origin part of a url
   join:            join,               // join url or fs path segments without replacing // in http://
-  timer:           timer,              // simple ms timer
+  timer:           timer,              // simple ms timer (returns int)
+  hrtimer:         hrtimer,            // simple sub-ms timer using process.hrtime or performance.now (returns float)  
   setaVal:         setaVal,            // set property value using array if it already exists
   getaVals:        getaVals,           // return array of values for a property or [] if none exists
   ms:              ms,                 // convert string to ms
@@ -258,6 +262,22 @@ function timer() {
     // debug('timer %s took %sms', str(start).slice(-5), time);
     return time;
   }
+}
+
+// NOTE: Warning: this code uses ES2015 const and array destructuring
+function hrnow() {
+  if (typeof process !== 'undefined' && process.hrtime) {
+    const [s, ns] = process.hrtime();
+    return (s * 1e3) + (ns / 1e6);
+  }
+  if (typeof performance !== 'undefined' && performance.now) return performance.now();
+  return _.now();
+}
+
+// NOTE: Warning: this code uses ES2015 const and arrow function
+function hrtimer() {
+  const start = hrnow();
+  return () => hrnow() - start;
 }
 
 // set prop k to v - convert to array and push if obj[k] exists
