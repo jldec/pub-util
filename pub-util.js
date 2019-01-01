@@ -45,7 +45,7 @@ _.mixin({
   origin:          origin,             // return origin part of a url
   join:            join,               // join url or fs path segments without replacing // in http://
   timer:           timer,              // simple ms timer (returns int)
-  hrtimer:         hrtimer,            // simple sub-ms timer using process.hrtime or performance.now (returns float)  
+  hrtimer:         hrtimer,            // simple sub-ms timer using process.hrtime or performance.now (returns float)
   setaVal:         setaVal,            // set property value using array if it already exists
   getaVals:        getaVals,           // return array of values for a property or [] if none exists
   ms:              ms,                 // convert string to ms
@@ -56,7 +56,7 @@ _.mixin({
   onceMaybe:       onceMaybe           // return once(maybe(f))
 });                             // mixins are not chainable by lodash
 
-_.templateSettings.interpolate = /\{\-\{(.+?)\}\-\}/g;
+_.templateSettings.interpolate = /\{-\{(.+?)\}-\}/g;
 _.templateSettings.escape = /\{\{(.+?)\}\}/g;
 _.templateSettings.evaluate = /\|(.+?)\|/g;
 
@@ -73,14 +73,14 @@ function formatCurrency(x) {
 
 // decompose href into {path: fragment:} by looking for #
 function parseHref(href) {
-  var match = str(href).match(/([^#]*)(#.*)/)
+  var match = str(href).match(/([^#]*)(#.*)/);
   if (!match) return { path:href };
   return { path:match[1], fragment:match[2] };
 }
 
 // search for 1 or more words (must match all words in order)
 function grep(s) {
-  return new RegExp(_.map(str(s).split(/\s/), _.escapeRegExp).join('.*'), "i")
+  return new RegExp(_.map(str(s).split(/\s/), _.escapeRegExp).join('.*'), 'i');
 }
 
 // convert names to slugified url strings containing only - . a-z 0-9
@@ -95,8 +95,8 @@ function slugify(s, opts) {
     .replace(/&/g, '-and-')
     .replace(/\+/g, '-plus-')
     .replace((opts.allow ?
-      new RegExp('[^-\.a-zA-Z0-9' + _.escapeRegExp(opts.allow) + ']+', 'g') :
-      /[^-\.a-zA-Z0-9]+/g), '-')
+      new RegExp('[^-.a-zA-Z0-9' + _.escapeRegExp(opts.allow) + ']+', 'g') :
+      /[^-.a-zA-Z0-9]+/g), '-')
     .replace(/--+/g, '-')
     .replace(/^-(.)/, '$1')
     .replace(/(.)-$/, '$1');
@@ -110,14 +110,14 @@ function unslugify(s) {
 // return ../ for each path-level, ./ for non-absolute path or root level
 function relPath(s) {
   s = str(s);
-  var lvls = str(s).replace(/[^\/]/g, '').slice(1);
+  var lvls = str(s).replace(/[^s/]/g, '').slice(1);
   if (lvls.length < 1 || s.slice(0,1) !== '/') return '.';
   return '..' + _.toArray(lvls).join('..').slice(0,-1);
 }
 
 // tests whether path is root level e.g. /foo -- returns false for /
 function isRootLevel(path){
-  return /^\/[^\/]+$/.test(str(path));
+  return /^\/[^/]+$/.test(str(path));
 }
 
 // return parent href given href
@@ -127,7 +127,7 @@ function isRootLevel(path){
 // see tests for edge cases
 function parentHref(href, noTrailingSlash) {
   href = str(href).replace(/\/\/+/g, '/');
-  var pmatch = href.match(/(.*\/)[^\/]+(\/$|$)/);
+  var pmatch = href.match(/(.*\/)[^/]+(\/$|$)/);
   return pmatch && (noTrailingSlash ? (pmatch[1].slice(0,-1) || '/') : pmatch[1]);
 }
 
@@ -141,7 +141,7 @@ function unPrefix(s, prefix) {
 
 // return top level of a path string
 function topLevel(href) {
-  var pmatch = str(href).match(/^\/?([^\/]*)/);
+  var pmatch = str(href).match(/^\/?([^/]*)/);
   return pmatch[1];
 }
 
@@ -164,7 +164,7 @@ function diff(a, b) {
 // just like _.merge but use a diff object to overwrite or delete properties of object a
 // deletes properties whose value in the diff === undefined (apply the tombstone)
 function mergeDiff(a, diff) {
-  var key, val
+  var key, val;
   if (a && diff) {
     for (key in diff) { if (diff.hasOwnProperty(key)) {
       val = diff[key];
@@ -211,14 +211,14 @@ function urlPath(url) {
 
 // minimal html object inspector
 function htmlify(obj) {
-  return '<pre>' + _.escape(util.inspect(obj)) + '</pre>'
+  return '<pre>' + _.escape(util.inspect(obj)) + '</pre>';
 }
 
 // turns a vector into a single string of comma-separated values
 function csv(arg) {
   return ( _.isArray(arg) ? arg :
            _.isObject(arg) ? _.values(arg) :
-           [arg]).join(', ')
+           [arg]).join(', ');
 }
 
 // return string surrounded by "" and embedded " doubled if it contains " or ,
@@ -229,7 +229,7 @@ function csvqt(s) {
 // return origin part of url i.e. http://hostname/... up to trailing /
 // if pattern doesn't match, returns entire url
 function origin(url) {
-  return url.replace(/([^\/]+\/\/[^\/]+\/).*/,'$1');
+  return url.replace(/([^/]+\/\/[^/]+\/).*/,'$1');
 }
 
 function hbreak(s) {
@@ -256,28 +256,28 @@ function join(base) {
 
 function timer() {
   var start = _.now();
-  // debug('timer %s start', str(start).slice(-5));
   return function() {
     var time = _.now() - start;
-    // debug('timer %s took %sms', str(start).slice(-5), time);
     return time;
-  }
+  };
 }
 
-// NOTE: Warning: this code uses ES2015 const and array destructuring
 function hrnow() {
   if (typeof process !== 'undefined' && process.hrtime) {
-    const [s, ns] = process.hrtime();
-    return (s * 1e3) + (ns / 1e6);
+    var sns = process.hrtime();
+    return (sns[0] * 1e3) + (sns[1] / 1e6);
   }
+  // not accurate - see https://developer.mozilla.org/en-US/docs/Web/API/Performance/now
   if (typeof performance !== 'undefined' && performance.now) return performance.now();
   return _.now();
 }
 
-// NOTE: Warning: this code uses ES2015 const and arrow function
 function hrtimer() {
-  const start = hrnow();
-  return () => hrnow() - start;
+  var start = hrnow();
+  return function() {
+    var time = hrnow() - start;
+    return time;
+  };
 }
 
 // set prop k to v - convert to array and push if obj[k] exists

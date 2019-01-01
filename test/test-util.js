@@ -3,7 +3,7 @@
  * copyright 2015, Jurgen Leschner - github.com/jldec - MIT license
 **/
 
-var test = require('tape')
+var test = require('tape');
 
 var u = require('../pub-util');
 
@@ -25,7 +25,7 @@ function testTimer(t, timer) {
     t.equal(typeof t2, 'number');
     t.true(t2 >= t1);
     t.true(t2 >= t1b);
-    t.end()
+    t.end();
   });
 }
 
@@ -237,7 +237,7 @@ test('u.join', function(t) {
 });
 
 test('u.getaVals and u.setaVal', function(t) {
-  var o = {}
+  var o = {};
   u.setaVal(o,'a',1);
   u.setaVal(o,'a',2);
   u.setaVal(o,'a',3);

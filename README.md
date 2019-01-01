@@ -1,4 +1,5 @@
 # pub-util
+[![Build Status](https://api.travis-ci.org/jldec/pub-util.svg?branch=master)](https://travis-ci.org/jldec/pub-util)
 
 Utility toolbelt based on [lodash](http://lodash.com/) for pub-server and other pub-* packages
 
