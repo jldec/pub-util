@@ -13,9 +13,41 @@ var ms = require('ms');
 
 _.mixin({
   date:            require('date-plus'),
-  pluck:           _.map,              // lodash v3 compatibility
+
+  // lodash v3 compatibility
+  all:             _.every,
+  any:             _.some,
+  backflow:        _.flowRight,
+  callback:        _.iteratee,
+  collect:         _.map,
+  compose:         _.flowRight,
+  contains:        _.includes,
+  detect:          _.find,
+  foldl:           _.reduce,
+  foldr:           _.reduceRight,
+  findWhere:       _.find,
+  first:           _.head,
+  include:         _.includes,
   indexBy:         _.keyBy,
+  inject:          _.reduce,
+  invoke:          _.invokeMap,
+  modArgs:         _.overArgs,
+  methods:         _.functions,
+  object:          _.fromPairs,
+  padLeft:         _.padStart,
+  padRight:        _.padEnd,
+  pairs:           _.toPairs,
+  pluck:           _.map,
+  rest:            _.tail,
+  restParam:       _.rest,
+  select:          _.filter,
+  sortByOrder:     _.orderBy,
+  trimLeft:        _.trimStart,
+  trimRight:       _.trimEnd,
+  trunc:           _.truncate,
+  unique:          _.uniq,
   where:           _.filter,
+
   format:          util.format,        // simple sprintf from node
   inherits:        util.inherits,      // prototypal inheritance from node
   str:             str,                // fast coerce to string (non-truthy objects including 0 return '')
