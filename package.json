@@ -1,6 +1,6 @@
 {
   "name": "pub-util",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Utility toolbelt based on lodash v4 for pub-server and other pub-* packages",
   "main": "pub-util.js",
   "dependencies": {

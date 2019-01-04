@@ -142,7 +142,7 @@ function unslugify(s) {
 // return ../ for each path-level, ./ for non-absolute path or root level
 function relPath(s) {
   s = str(s);
-  var lvls = str(s).replace(/[^s/]/g, '').slice(1);
+  var lvls = str(s).replace(/[^/]/g, '').slice(1);
   if (lvls.length < 1 || s.slice(0,1) !== '/') return '.';
   return '..' + _.toArray(lvls).join('..').slice(0,-1);
 }

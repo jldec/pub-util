@@ -357,3 +357,22 @@ test('u.merge edge cases', function(t) {
   t.deepEqual(u.merge({}, {a:1}), {a:1});
   t.end();
 });
+
+test('u.relPath', function(t) {
+  t.equal(u.relPath(''), '.');
+  t.equal(u.relPath('a'), '.');
+  t.equal(u.relPath('a/b/c'), '.');
+  t.equal(u.relPath('/'), '.');
+  t.equal(u.relPath('/a'), '.');
+  t.equal(u.relPath('/a/'), '..');
+  t.equal(u.relPath('/a/b'), '..');
+  t.equal(u.relPath('/a/b/'), '../..');
+  t.equal(u.relPath('/a/b/'), '../..');
+  t.equal(u.relPath('/a/b/ /'), '../../..');
+  t.equal(u.relPath('/a/b/a /'), '../../..');
+  t.equal(u.relPath('/a/b/ b/'), '../../..');
+  t.equal(u.relPath('/a/b/c/d'), '../../..');
+  t.end();
+});
+
+// TODO - moar tests please!
