@@ -75,7 +75,7 @@ _.mixin({
   cap1:            cap1,               // capitalize first letter of a string
   topLevel:        topLevel,           // return top level of a path string
   origin:          origin,             // return origin part of a url
-  join:            join,               // join url or fs path segments without replacing // in http://
+  join:            join,               // join url or fs path segments without replacing // in https://
   timer:           timer,              // simple ms timer (returns int)
   hrtimer:         hrtimer,            // simple sub-ms timer using process.hrtime or performance.now (returns float)
   setaVal:         setaVal,            // set property value using array if it already exists
@@ -258,7 +258,7 @@ function csvqt(s) {
   return /,|"/.test(s) ? '"' + str(s).replace(/"/g, '""') + '"' : s;
 }
 
-// return origin part of url i.e. http://hostname/... up to trailing /
+// return origin part of url i.e. https://hostname/... up to trailing /
 // if pattern doesn't match, returns entire url
 function origin(url) {
   return url.replace(/([^/]+\/\/[^/]+\/).*/,'$1');
@@ -268,7 +268,7 @@ function hbreak(s) {
   return _.escape(str(s)).replace(/[\n\r]+/g, '<br>');
 }
 
-// path join which doesn't mess with the // in http://
+// path join which doesn't mess with the // in https://
 function join(base) {
   var args = [].slice.call(arguments, 1);
   base = str(base);
