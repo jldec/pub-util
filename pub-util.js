@@ -330,8 +330,10 @@ function getaVals(obj, k) {
   return val;
 }
 
-function throttleMs(f, waitMs, options) {
-  return _.throttle(f, ms(waitMs), options);
+// note throttled functions require cancellation to avoid delaying node shutdown
+// see test/throttle-5s.js
+function throttleMs(f, waitMs) {
+  return _.throttle(f, ms(waitMs), {leading:true, trailing:false});
 }
 
 // note - no support for extra params
