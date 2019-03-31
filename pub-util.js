@@ -6,7 +6,7 @@
 **/
 
 var util = require('util');
-var path = require('path');
+var path = require('path').posix;
 var querystring = require('querystring');
 var _ = require('lodash');
 var ms = require('ms');
