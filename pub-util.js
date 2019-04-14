@@ -6,7 +6,8 @@
 **/
 
 var util = require('util');
-var path = require('path').posix;
+var path = require('path');
+var ppath = path.posix || path; // in browser path is posix
 var querystring = require('querystring');
 var _ = require('lodash');
 var ms = require('ms');
@@ -268,7 +269,7 @@ function hbreak(s) {
   return _.escape(str(s)).replace(/[\n\r]+/g, '<br>');
 }
 
-// path join which doesn't mess with the // in https://
+// posix path join which doesn't mess with the // in https://
 function join(base) {
   var args = [].slice.call(arguments, 1);
   base = str(base);
@@ -282,7 +283,7 @@ function join(base) {
     args.unshift(base);
     base = '';
   }
-  return base + path.join.apply(this, _.map(args,str));
+  return base + ppath.join.apply(this, _.map(args,str));
 }
 
 
