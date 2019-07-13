@@ -375,4 +375,13 @@ test('u.relPath', function(t) {
   t.end();
 });
 
+test('u.diff', function(t) {
+  t.deepEqual(u.diff({},{}), {});
+  t.deepEqual(u.diff({a:1,b:2,c:'foo'},{a:1,b:2,c:'foo'}), {});
+  t.deepEqual(u.diff({a:1,b:2,c:'foo'},{a:1,b:2,c:'bar'}), {c:'bar'});
+  t.deepEqual(u.diff({a:1,b:2,c:'foo'},{a:1,b:2,d:'bar'}), {c:undefined, d:'bar'});
+  t.deepEqual(u.diff({a:1,b:2,c:[1,2]},{a:1,b:2,c:[1,2]}), {c:[1,2]}); // shallow diff finds arrays with same values
+  t.end();
+});
+
 // TODO - moar tests please!

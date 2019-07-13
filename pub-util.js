@@ -184,13 +184,13 @@ function cap1(s) {
   return s.slice(0,1).toUpperCase() + s.slice(1);
 }
 
-// return 'diff' object with the props from object b which are different (or missing) in object a
+// return shallow 'diff' object with the props from object b which are different (or missing) in object a
 // includes tombstone value === undefined for props which exist in object a but not in object b,
 function diff(a, b) {
   var diff = {};
   var key;
-  for (key in b) { if (b.hasOwnProperty(key) && b[key] !== a[key]) { diff[key] = b[key]; }}
-  for (key in a) { if (a.hasOwnProperty(key) && !(key in b)) { diff[key] = undefined; }}
+  for (key in b) { if (Object.prototype.hasOwnProperty.call(b,key) && b[key] !== a[key]) { diff[key] = b[key]; }}
+  for (key in a) { if (Object.prototype.hasOwnProperty.call(a,key) && !(key in b)) { diff[key] = undefined; }}
   return diff;
 }
 
@@ -199,7 +199,7 @@ function diff(a, b) {
 function mergeDiff(a, diff) {
   var key, val;
   if (a && diff) {
-    for (key in diff) { if (diff.hasOwnProperty(key)) {
+    for (key in diff) { if (Object.prototype.hasOwnProperty.call(diff,key)) {
       val = diff[key];
       if (val === undefined) {
         delete a[key];
@@ -315,7 +315,7 @@ function hrtimer() {
 
 // set prop k to v - convert to array and push if obj[k] exists
 function setaVal(obj, k, v) {
-  if (obj.hasOwnProperty(k)) {
+  if (Object.prototype.hasOwnProperty.call(obj,k)) {
     var val = obj[k];
     if (!_.isArray(val)) { obj[k] = [val]; }
     obj[k].push(v);
@@ -325,7 +325,7 @@ function setaVal(obj, k, v) {
 
 // return obj[k] values coerced to array
 function getaVals(obj, k) {
-  if (!obj.hasOwnProperty(k)) return [];
+  if (!Object.prototype.hasOwnProperty.call(obj,k)) return [];
   var val = obj[k];
   if (!_.isArray(val)) return [val];
   return val;
