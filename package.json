@@ -1,28 +1,27 @@
 {
   "name": "pub-util",
-  "version": "3.0.8",
+  "version": "3.0.9",
   "description": "Utility toolbelt based on lodash v4 for pub-server and other pub-* packages",
   "main": "pub-util.js",
   "dependencies": {
-    "date-plus": "^1.0.9",
-    "lodash": "^4.17.14",
+    "date-plus": "^1.0.10",
+    "lodash": "^4.17.15",
     "ms": "^2.1.2"
   },
   "devDependencies": {
-    "eslint": "^6.0.1",
-    "tape": "^4.11.0"
+    "eslint": "^6.8.0",
+    "tape": "^4.13.0"
   },
   "files": [
     "pub-util.js"
   ],
   "scripts": {
-    "test": "tape test/test-*.js",
-    "lint": "eslint ."
+    "test": "eslint . && tape test/test-*.js"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/jldec/pub-util.git"
   },
-  "author": "jurgen leschner",
+  "author": "Jürgen Leschner",
   "license": "MIT"
 }
