@@ -69,6 +69,7 @@ _.mixin({
   urlPath:         urlPath,            // return url minus everything starting from the first ? or #
   uqt:             encodeURIComponent, // simple shorthand
   csv:             csv,                // return string of comma separated values
+  scsv:            scsv,               // return string of semicolon separated values
   csvqt:           csvqt,              // escape csv string value
   htmlify:         htmlify,            // minimal html object inspector
   hbreak:          hbreak,             // replace /n with <br> and escapes the rest
@@ -86,7 +87,8 @@ _.mixin({
   setIntervalMs:   setIntervalMs,      // setInterval with ms string
   setTimeoutMs:    setTimeoutMs,       // setTimeout with ms string
   maybe:           maybe,              // return f || noop
-  onceMaybe:       onceMaybe           // return once(maybe(f))
+  onceMaybe:       onceMaybe,          // return once(maybe(f))
+  pad0:            pad0                // left pad with 0, default to length 2
 });                             // mixins are not chainable by lodash
 
 _.templateSettings.interpolate = /\{-\{(.+?)\}-\}/g;
@@ -249,9 +251,19 @@ function htmlify(obj) {
 
 // turns a vector into a single string of comma-separated values
 function csv(arg) {
+  return xsv(arg, ', ');
+}
+
+// turns a vector into a single string of semicolon-separated values
+function scsv(arg) {
+  return xsv(arg, ';');
+}
+
+// turns a vector into a single string of x-separated values
+function xsv(arg,sep) {
   return ( _.isArray(arg) ? arg :
            _.isObject(arg) ? _.values(arg) :
-           [arg]).join(', ');
+           [arg]).join(sep);
 }
 
 // return string surrounded by "" and embedded " doubled if it contains " or ,
@@ -356,3 +368,7 @@ function maybe(f) {
 }
 
 function noop(){}
+
+function pad0(n, len) {
+  return _.padStart(str(n), len || 2, '0');
+}

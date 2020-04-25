@@ -216,6 +216,16 @@ test('u.csv', function(t) {
   t.end();
 });
 
+test('u.scsv', function(t) {
+  t.equal(u.scsv(), '');
+  t.equal(u.scsv(1), '1');
+  t.equal(u.scsv([1,2]), '1;2');
+  t.equal(u.scsv({}), '');
+  t.equal(u.scsv({a:1}), '1');
+  t.equal(u.scsv({a:1, b:2}), '1;2');
+  t.equal(u.scsv('1'), '1');
+  t.end();
+});
 
 test('u.join', function(t) {
   t.equal(u.join(), '.');
@@ -381,6 +391,18 @@ test('u.diff', function(t) {
   t.deepEqual(u.diff({a:1,b:2,c:'foo'},{a:1,b:2,c:'bar'}), {c:'bar'});
   t.deepEqual(u.diff({a:1,b:2,c:'foo'},{a:1,b:2,d:'bar'}), {c:undefined, d:'bar'});
   t.deepEqual(u.diff({a:1,b:2,c:[1,2]},{a:1,b:2,c:[1,2]}), {c:[1,2]}); // shallow diff finds arrays with same values
+  t.end();
+});
+
+test('u.pad0', function(t) {
+  t.equal(u.pad0(), '00');
+  t.equal(u.pad0(''), '00');
+  t.equal(u.pad0(0), '00');
+  t.equal(u.pad0(1), '01');
+  t.equal(u.pad0('x'), '0x');
+  t.equal(u.pad0('-3'), '-3');
+  t.equal(u.pad0(100), '100');
+  t.equal(u.pad0(1.5), '1.5');
   t.end();
 });
 
