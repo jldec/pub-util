@@ -1,5 +1,5 @@
 # pub-util
-![CI](https://github.com/jldec/pub-util/workflows/CI/badge.svg)
+[![CI](https://github.com/jldec/pub-util/workflows/CI/badge.svg)](https://github.com/jldec/pub-util/actions)
 
 Utility toolbelt based on [lodash](https://lodash.com/) for pub-server and other pub-* packages
 
