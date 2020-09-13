@@ -150,9 +150,9 @@ function relPath(s) {
   return '..' + _.toArray(lvls).join('..').slice(0,-1);
 }
 
-// tests whether path is root level e.g. /foo -- returns false for /
+// tests whether path is root level e.g. /foo or /foo/ -- returns false for /
 function isRootLevel(path){
-  return /^\/[^/]+$/.test(str(path));
+  return /^\/[^/]+\/?$/.test(str(path));
 }
 
 // return parent href given href
@@ -174,7 +174,7 @@ function unPrefix(s, prefix) {
   return s;
 }
 
-// return top level of a path string
+// return top level name in a path string without initial or trailing /
 function topLevel(href) {
   var pmatch = str(href).match(/^\/?([^/]*)/);
   return pmatch[1];

@@ -1,15 +1,15 @@
 {
   "name": "pub-util",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "description": "Utility toolbelt based on lodash v4 for pub-server and other pub-* packages",
   "main": "pub-util.js",
   "dependencies": {
     "date-plus": "^1.1.1",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.20",
     "ms": "^2.1.2"
   },
   "devDependencies": {
-    "eslint": "^7.5.0",
+    "eslint": "^7.9.0",
     "tape": "^5.0.1"
   },
   "files": [

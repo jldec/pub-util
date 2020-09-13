@@ -406,4 +406,31 @@ test('u.pad0', function(t) {
   t.end();
 });
 
+test('u.isRootLevel', function(t) {
+  t.equal(u.isRootLevel(''), false);
+  t.equal(u.isRootLevel('/'), false);
+  t.equal(u.isRootLevel('foo'), false);
+  t.equal(u.isRootLevel('/foo'), true);
+  t.equal(u.isRootLevel('/foo/'), true);
+  t.equal(u.isRootLevel('//'), false);
+  t.equal(u.isRootLevel('/foo/bar'), false);
+  t.equal(u.isRootLevel('/foo/bar/'), false);
+  t.equal(u.isRootLevel('/foo/bar/baz'), false);
+  t.end();
+});
+
+test('u.topLevel', function(t) {
+  t.equal(u.topLevel(''), '');
+  t.equal(u.topLevel('/'), '');
+  t.equal(u.topLevel('foo'), 'foo');
+  t.equal(u.topLevel('/foo'), 'foo');
+  t.equal(u.topLevel('/foo/'), 'foo');
+  t.equal(u.topLevel('//'), '');
+  t.equal(u.topLevel('/foo/bar'), 'foo');
+  t.equal(u.topLevel('/foo/bar/'), 'foo');
+  t.equal(u.topLevel('/foo/bar/baz'), 'foo');
+  t.end();
+});
+
+
 // TODO - moar tests please!
