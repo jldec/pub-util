@@ -1,6 +1,6 @@
 /**
  * test pub-util
- * copyright 2015-2020, Jürgen Leschner - github.com/jldec - MIT license
+ * Copyright (c) 2015-2021 Jürgen Leschner - github.com/jldec - MIT license
 **/
 
 var test = require('tape');
